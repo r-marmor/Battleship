@@ -10,10 +10,13 @@ function Ship(length) {
     const getHits = () => hits;
 
     const isSunk = () => {
-        return (length == hits);
+        if (length == hits) sunk = true;
+        return sunk;
     };
 
     return { length, hit, getHits, isSunk };
 }
+
+
 
 module.exports = Ship;

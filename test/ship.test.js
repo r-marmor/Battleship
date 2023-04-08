@@ -1,4 +1,4 @@
-const Ship = require("./ship.js");
+const Ship = require("../ship.js");
 
 describe('Ship()', () => {
     it('hit() should increment the hits counter', () => {
