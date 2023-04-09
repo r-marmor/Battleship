@@ -2,7 +2,7 @@ const Ship = require("../ship.js");
 
 describe('Ship()', () => {
     it('hit() should increment the hits counter', () => {
-        const ship1 = Ship(4);
+        const ship1 = Ship('patrolBoat');
         expect(ship1.getHits()).toBe(0); // checks that the hits counter is 0 initially
         ship1.hit(); // call the hit method
         expect(ship1.getHits()).toBe(1);
@@ -11,7 +11,7 @@ describe('Ship()', () => {
     });
 
     it("isSunk() should turns to true when the number of hits equals the ship's length", () => {
-        const ship2 = Ship(2); // initialization
+        const ship2 = Ship('patrolBoat'); // initialization
         expect(ship2.isSunk()).toBe(false); // default value must be false;
         ship2.hit();
         // ship2.hit();

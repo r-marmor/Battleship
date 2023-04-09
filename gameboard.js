@@ -1,14 +1,51 @@
+const Ship = require("./ship");
+
+const BOARD_SIZE = 10;
+
 function Gameboard() {
     // create a standard 10*10 gameboard 
-    let _board = new Array(10).fill(null).map(() => new Array(10).fill(null));
-    
+    let _board = new Array(BOARD_SIZE).fill(null).map(() => new Array(BOARD_SIZE).fill(null));
     const getBoard = () => _board;
 
-    const returnCoordinates = (x, y) => {
-        return _board[x][y];
+    const placeShip = (ship, startPosX, startPosY) => {
+
+        // checks if coordinates are inbounds
+        if (startPosX < 0 || BOARD_SIZE <= startPosX || startPosY < 0 || BOARD_SIZE <= startPosY) 
+            return false;
+        
+        // get ship properties
+        const shipName = ship.getId();
+        const shipLength = ship.getLength();
+        let direction = ship.getDirection();
+
+        // check if ship is inbound
+        if (direction === "horizontal" && startPosY + shipLength <= BOARD_SIZE) {
+            const shipPath = []; // stores ship path
+            for (let i = 0; i < shipLength; i++) {
+                shipPath.push(_board[startPosX][startPosY + i]);
+            }
+            // check if all values are null = no ship is on the path
+            if (shipPath.every(val => val === null)) {
+                // start implementing the new ship
+                for (let i = 0; i < shipLength; i++) {
+                    _board[startPosX][startPosY + i] = shipName;
+                }
+            }
+        // same statements as above with vertical direction
+        } else if (direction == "vertical" && startPosX + shipLength <= BOARD_SIZE) {
+            const shipPath = [];
+                for (let i = 0; i < shipLength; i++) {
+                    shipPath.push(_board[startPosX + i][startPosY]);
+                }
+                if (shipPath.every(val => val === null)) {
+                    for (let i = 0; i < shipLength; i++) {
+                        _board[startPosX + i][startPosY] = shipName;
+                    }
+                }
+        }          
     };
 
-    return { getBoard, returnCoordinates };
+    return { getBoard, placeShip };
 }
 
 module.exports = Gameboard;
