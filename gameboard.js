@@ -6,12 +6,34 @@ function Gameboard() {
     // create a standard 10*10 gameboard 
     let _board = new Array(BOARD_SIZE).fill(null).map(() => new Array(BOARD_SIZE).fill(null));
     const getBoard = () => _board;
+    
+    //records ships placed on board
+    const shipsOnBoard = new Map();
+    // number max of ship by type
+    const maxPerShip = {
+        carrier: 1,
+        battleship: 1,
+        destroyer: 1,
+        submarine: 2,
+        patrolBoat: 2
+    };
+   
+    // const isAllSunk = () => shipsOnBoard.every(obj => obj.isSunk() == true);
 
     const placeShip = (ship, startPosX, startPosY) => {
 
         // checks if coordinates are inbounds
         if (startPosX < 0 || BOARD_SIZE <= startPosX || startPosY < 0 || BOARD_SIZE <= startPosY)
             throw new Error("coordinates are outbounds");
+
+        // tracks the fleet created
+        // if 1st instanciation of a ship type, create one
+        if (!shipsOnBoard.has(ship.getId())) {
+        shipsOnBoard.set(ship.getId(), 1);
+        // if already exists, checks if the max number allowed is reach, if not increment the counter
+        } else if (shipsOnBoard.get(ship.getId()) < maxPerShip[ship.getId()]) {
+            shipsOnBoard.set(ship.getId(), shipsOnBoard.get(ship.getId()) + 1);
+        }
         
         // get ship properties
         const shipLength = ship.getLength();
@@ -53,9 +75,8 @@ function Gameboard() {
 
     const receiveAttack = (x, y) => {
         let squareShoted = _board[x][y];
-
+        // if shot hit a ship, call the hit function to the ship hit
         if (squareShoted !== null) {
-            // if shot hit a ship, call the hit function to the ship hit
             squareShoted.hit();
             return true;
         } else {
@@ -64,14 +85,24 @@ function Gameboard() {
             return false;
         }
     };
+
     return { getBoard, placeShip, receiveAttack };
 }
 
-const gameboard = Gameboard();
-const ship1 = Ship('carrier');
-gameboard.placeShip(ship1, 0, 0);
-gameboard.receiveAttack(1, 0);
-gameboard.receiveAttack(2, 2);
-
+// const gameboard = Gameboard();
+// const ship1 = Ship('carrier');
+// const ship2 = Ship('carrier');
+// const ship3 = Ship('patrolBoat');
+// const ship4 = Ship('patrolBoat');
+// const ship5 = Ship('patrolBoat');
+// const ship6 = Ship('patrolBoat');
+// gameboard.placeShip(ship1, 0, 0);
+// gameboard.placeShip(ship2, 1, 0);
+// gameboard.placeShip(ship3, 2, 0);
+// gameboard.placeShip(ship4, 3, 0);
+// gameboard.placeShip(ship5, 4, 0);
+// gameboard.placeShip(ship6, 5, 0);
+// gameboard.receiveAttack(0, 0);
+// gameboard.receiveAttack(0, 1);
 
 module.exports = Gameboard;
