@@ -8,10 +8,19 @@ const  Gameboard = require("../gameBoard.js");
 const Ship = require('../ship.js');
 
 describe('Gameboard()', () => {
-    describe('board', () => {
         const gameboard = Gameboard();
+        
+        const ship1 = Ship('patrolBoat');
+        const ship2 = Ship('submarine');
+        const ship3 = Ship('destroyer');
+        const ship4 = Ship('battleship');
+        const ship5 = Ship('carrier');
+
+    describe('board', () => {
+        
 
         test('the board is empty', () => {
+            
             const actual = gameboard.getBoard().every(cells => cells.every(value => value === null));
             expect(actual).toBe(true);
         });
@@ -24,7 +33,6 @@ describe('Gameboard()', () => {
 
     describe('placeShip()', () => {
         test('starting positions are inbounds', () => {
-            const gameboard = Gameboard();
             const ship1 = Ship('patrolBoat');
 
             expect(() => gameboard.placeShip(ship1, -1, 0)).toThrow("coordinates are outbounds");
@@ -56,8 +64,8 @@ describe('Gameboard()', () => {
     });
 
     describe('receiveAttack()', () => {
+        const gameboard = Gameboard();
         test("takes a pair of coordinates, determines whether or not the attack hit a ship", () => {
-            const gameboard = Gameboard();
             const ship1 = Ship('carrier');
             const ship2 = Ship('battleship');
             ship2.changeDirection();
@@ -72,7 +80,7 @@ describe('Gameboard()', () => {
         });
 
         test("sends the 'hit' to the correct ship", () => {
-           const gameboard = Gameboard();
+            const gameboard = Gameboard();
            const ship1 = Ship('patrolBoat'); // create a new ship
            expect(ship1.getHits()).toBe(0);
            gameboard.placeShip(ship1, 0, 0); // place it on board
@@ -84,8 +92,13 @@ describe('Gameboard()', () => {
            expect(ship1.getHits()).toBe(2);
         });
 
-        // test("records the coordinates of the missed shot", () => {
-
-        // });
+        test("records the coordinates of the missed shot", () => {
+            const gameboard = Gameboard();
+            gameboard.placeShip(ship1, 0, 0);
+            expect(gameboard.receiveAttack(1, 0)).toBe(false);
+            expect(gameboard.receiveAttack(8, 8)).toBe(false);
+            expect(gameboard.getBoard()[1][0]).toBe("X");
+            expect(gameboard.getBoard()[8][8]).toBe("X");
+        });
     });
 });

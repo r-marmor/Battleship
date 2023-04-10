@@ -49,23 +49,29 @@ function Gameboard() {
         }       
     };
 
+    let missShots = []; // records missed shots
+
     const receiveAttack = (x, y) => {
-        const squareShotted = _board[x][y];
-        
-        if (squareShotted !== null) {
+        let squareShoted = _board[x][y];
+
+        if (squareShoted !== null) {
             // if shot hit a ship, call the hit function to the ship hit
-            squareShotted.hit();
+            squareShoted.hit();
             return true;
+        } else {
+            _board[x][y] = "X";
+            missShots.push(`[${x}, ${y}]`);
+            return false;
         }
     };
-
-
     return { getBoard, placeShip, receiveAttack };
 }
 
-// const gameBoard = Gameboard();
-// const ship1 = Ship('patrolBoat');
-// gameBoard.placeShip(ship1, 0, 0);
-// console.log(gameBoard.getBoard()[0][0]);
+const gameboard = Gameboard();
+const ship1 = Ship('carrier');
+gameboard.placeShip(ship1, 0, 0);
+gameboard.receiveAttack(1, 0);
+gameboard.receiveAttack(2, 2);
+
 
 module.exports = Gameboard;
