@@ -14,7 +14,7 @@ describe('Ship()', () => {
         const ship2 = Ship('patrolBoat'); // initialization
         expect(ship2.isSunk()).toBe(false); // default value must be false;
         ship2.hit();
-        // ship2.hit();
+        ship2.hit();
         ship2.hit(); // checks if the hit function stops if the ship is sunk
         expect(ship2.isSunk()).toBe(true);
     });

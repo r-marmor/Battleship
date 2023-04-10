@@ -32,7 +32,7 @@ function Ship(type) {
     };
 
     const hit = () => {
-    if (length == hits) return;
+    if (length === hits) return;
     hits++;
     };
 

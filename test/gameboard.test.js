@@ -52,5 +52,40 @@ describe('Gameboard()', () => {
             expect(() => gameboard.placeShip(ship1, 1, 5)).toThrow("ships can't overlap");
             expect(gameboard.getBoard()[1][6]).not.toBe(null); // "patrolBoat on it";
         });
+
+    });
+
+    describe('receiveAttack()', () => {
+        test("takes a pair of coordinates, determines whether or not the attack hit a ship", () => {
+            const gameboard = Gameboard();
+            const ship1 = Ship('carrier');
+            const ship2 = Ship('battleship');
+            ship2.changeDirection();
+            gameboard.placeShip(ship1, 0, 0);
+            gameboard.placeShip(ship2, 1, 0);
+            expect(gameboard.receiveAttack(0, 0)).toBe(true);
+            expect(gameboard.receiveAttack(0, 4)).toBe(true);
+            expect(gameboard.receiveAttack(0, 5)).not.toBe(true);
+            expect(gameboard.receiveAttack(1, 0)).toBe(true);
+            expect(gameboard.receiveAttack(4, 0)).toBe(true);
+            expect(gameboard.receiveAttack(5, 0)).not.toBe(true);
+        });
+
+        test("sends the 'hit' to the correct ship", () => {
+           const gameboard = Gameboard();
+           const ship1 = Ship('patrolBoat'); // create a new ship
+           expect(ship1.getHits()).toBe(0);
+           gameboard.placeShip(ship1, 0, 0); // place it on board
+           gameboard.receiveAttack(0, 0); // shot the ship
+           expect(ship1.getHits()).toBe(1);
+           gameboard.receiveAttack(0, 1); // shot the ship
+           expect(ship1.getHits()).toBe(2);
+           gameboard.receiveAttack(0, 3); // miss the ship
+           expect(ship1.getHits()).toBe(2);
+        });
+
+        // test("records the coordinates of the missed shot", () => {
+
+        // });
     });
 });

@@ -14,7 +14,6 @@ function Gameboard() {
             throw new Error("coordinates are outbounds");
         
         // get ship properties
-        const shipName = ship.getId();
         const shipLength = ship.getLength();
         const direction = ship.getDirection();
 
@@ -29,7 +28,7 @@ function Gameboard() {
             if (shipPath.every(val => val === null)) {
                 // then start implementing the new ship
                 for (let i = 0; i < shipLength; i++) {
-                    _board[startPosX][startPosY + i] = shipName;
+                    _board[startPosX][startPosY + i] = ship;
                 }
             } else {
                 throw new Error("ships can't overlap");
@@ -42,7 +41,7 @@ function Gameboard() {
                 }
                 if (shipPath.every(val => val === null)) {
                     for (let i = 0; i < shipLength; i++) {
-                        _board[startPosX + i][startPosY] = shipName;
+                        _board[startPosX + i][startPosY] = ship;
                     }
                 } else {
                     throw new Error("ships can't overlap");
@@ -50,7 +49,23 @@ function Gameboard() {
         }       
     };
 
-    return { getBoard, placeShip };
+    const receiveAttack = (x, y) => {
+        const squareShotted = _board[x][y];
+        
+        if (squareShotted !== null) {
+            // if shot hit a ship, call the hit function to the ship hit
+            squareShotted.hit();
+            return true;
+        }
+    };
+
+
+    return { getBoard, placeShip, receiveAttack };
 }
+
+// const gameBoard = Gameboard();
+// const ship1 = Ship('patrolBoat');
+// gameBoard.placeShip(ship1, 0, 0);
+// console.log(gameBoard.getBoard()[0][0]);
 
 module.exports = Gameboard;
