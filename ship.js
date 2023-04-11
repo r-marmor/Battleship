@@ -1,18 +1,4 @@
-const SHIP_TYPES = [
-    'carrier',
-    'battleship',
-    'destroyer',
-    'submarine',
-    'patrolBoat'
-];
-
-const SHIP_LENGTH = {
-    carrier: 5,
-    battleship: 4,
-    destroyer: 3,
-    submarine: 3,
-    patrolBoat: 2
-};
+const { SHIP_LENGTH } = require('./helpers/helpers.js');
 
 function Ship(type) {
     // properties
@@ -42,7 +28,7 @@ function Ship(type) {
     const getLength = () => length;
 
     const isSunk = () => {
-        if (length == hits) sunk = true;
+        if (length === hits) sunk = true;
         return sunk;
     };
 

@@ -4,21 +4,12 @@
 // keep track of missed attacks
 // report if all ships have been sunk or not
 
-const  Gameboard = require("../gameBoard.js");
-const Ship = require('../ship.js');
+const Gameboard = require("../gameBoard.js");
+const Ship = require('../ship');
 
 describe('Gameboard()', () => {
         const gameboard = Gameboard();
-        
-        const ship1 = Ship('patrolBoat');
-        const ship2 = Ship('submarine');
-        const ship3 = Ship('destroyer');
-        const ship4 = Ship('battleship');
-        const ship5 = Ship('carrier');
-
     describe('board', () => {
-        
-
         test('the board is empty', () => {
             
             const actual = gameboard.getBoard().every(cells => cells.every(value => value === null));
@@ -31,6 +22,23 @@ describe('Gameboard()', () => {
         });
     });
 
+    // describe('isAllShipsSunk()', () => {
+    //     test("To start a game, at least 1 ship has not to be sunk", () => {
+    //         const gameboard = Gameboard();
+    //         const ship1 = Ship("patrolBoat");
+    //         const ship2 = Ship("patrolBoat");
+    //         gameboard.placeShip(ship1, 0, 0);
+    //         gameboard.receiveAttack(0, 0); // ship1 got hit 1 time but has a length of 2
+    //         gameboard.receiveAttack(0, 1); // ship1 got hit a 2nd time, he sank
+    //         expect(gameboard.isAllShipsSunk()).toBe(true);
+    //         gameboard.placeShip(ship2, 1, 0);
+    //         expect(gameboard.isAllShipsSunk()).toBe(false);
+    //         gameboard.receiveAttack(1, 0);
+    //         gameboard.receiveAttack(1, 1);
+    //         expect(gameboard.isAllShipsSunk()).toBe(true);
+    //     });
+    // });
+
     describe('placeShip()', () => {
         test('starting positions are inbounds', () => {
             const ship1 = Ship('patrolBoat');
@@ -42,22 +50,56 @@ describe('Gameboard()', () => {
             expect(() => gameboard.placeShip(ship1, 0, 10)).toThrow("coordinates are outbounds");
             expect(() => gameboard.placeShip(ship1, 10, 0)).toThrow("coordinates are outbounds");
         });
+
+        test("you can't place more than the limited number of ship type", () => {
+            const gameboard = Gameboard();
+            const carrier = Ship('carrier'); // can only be 1
+            const patrolBoat = Ship('patrolBoat'); // max of 2
+            expect(gameboard.placeShip(carrier, 0, 0)).not.toBe(false); // 1st one
+            expect(gameboard.placeShip(carrier, 1, 0)).toBe(false); // can't have 2
+            expect(gameboard.placeShip(patrolBoat, 2, 0)).not.toBe(false); // 1st one
+            expect(gameboard.placeShip(patrolBoat, 3, 0)).not.toBe(false); // 2nd one
+            expect(gameboard.placeShip(patrolBoat, 4, 0)).toBe(false); // can't have a 3rd
+        });
+
+        // test("you can't place more than the max number of ships on board", () => {
+        //     const gameboard = Gameboard();
+        //     const ship1 = Ship('patrolBoat');
+        //     const ship2 = Ship('patrolBoat');
+        //     const ship3 = Ship('carrier');
+        //     const ship4 = Ship('battleship');
+        //     const ship5 = Ship('submarine');
+        //     const ship6 = Ship('submarine');
+        //     const ship7 = Ship('destroyer');
+        //     const ship8 = Ship('carrier');
+        //     gameboard.placeShip(ship1, 0, 0);
+        //     gameboard.placeShip(ship2, 1, 0);
+        //     gameboard.placeShip(ship3, 2, 0);
+        //     gameboard.placeShip(ship4, 3, 0);
+        //     gameboard.placeShip(ship5, 4, 0);
+        //     gameboard.placeShip(ship6, 5, 0);
+        //     expect(gameboard.placeShip(ship7, 6, 0)).not.toBe(true);
+        //     expect(gameboard.placeShip(ship8, 7, 0)).toBe(false);
+        // });
         
         test("Ships can't overlap", () => {
             const gameboard = Gameboard();
+            expect(gameboard.getBoard().every(cells => cells.every(value => value === null))).toBe(true);
             const ship1 = Ship('submarine');
             const ship2 = Ship('destroyer');
+            const ship3 = Ship('patrolBoat');
+            const ship4 = Ship('carrier');
+            const ship5 = Ship('battleship');
+
             gameboard.placeShip(ship1, 0, 0); // placing 1st ship, can't overlap
             expect(() => gameboard.placeShip(ship2, 0, 1)).toThrow("ships can't overlap");
-            expect(() => gameboard.placeShip(ship2, 0, 2)).toThrow("ships can't overlap");
-            expect(gameboard.placeShip(ship2, 0, 3)).not.toBe(false);
-            const ship3 = Ship('patrolBoat');
+            expect(() => gameboard.placeShip(ship4, 0, 2)).toThrow("ships can't overlap");
+            expect(gameboard.placeShip(ship1, 0, 3)).not.toBe(false);
             ship3.changeDirection();
             expect(ship3.getDirection()).toBe("vertical");
-            expect(() => gameboard.placeShip(ship3, 0, 0)).toThrow("ships can't overlap");
             expect(() => gameboard.placeShip(ship3, 0, 5)).toThrow("ships can't overlap");
             expect(gameboard.placeShip(ship3, 0, 6)).not.toBe(false);
-            expect(() => gameboard.placeShip(ship1, 1, 5)).toThrow("ships can't overlap");
+            expect(() => gameboard.placeShip(ship5, 1, 5)).toThrow("ships can't overlap");
             expect(gameboard.getBoard()[1][6]).not.toBe(null); // "patrolBoat on it";
         });
 
@@ -94,11 +136,22 @@ describe('Gameboard()', () => {
 
         test("records the coordinates of the missed shot", () => {
             const gameboard = Gameboard();
+            const ship1 = Ship('patrolBoat');
             gameboard.placeShip(ship1, 0, 0);
             expect(gameboard.receiveAttack(1, 0)).toBe(false);
             expect(gameboard.receiveAttack(8, 8)).toBe(false);
             expect(gameboard.getBoard()[1][0]).toBe("X");
             expect(gameboard.getBoard()[8][8]).toBe("X");
+        });
+
+        test("The same coordinates can't be shot twice", () => {
+            const gameboard = Gameboard();
+            const ship1 = Ship('patrolBoat');
+            gameboard.placeShip(ship1, 0, 0);
+            expect(gameboard.receiveAttack(0, 0)).toBe(true); // shot hit a ship
+            expect(gameboard.receiveAttack(0, 0)).toBeFalsy(); // can't shot twice the same coord
+            expect(gameboard.receiveAttack(9, 9)).toBe(false); // no ship on that square
+            expect(gameboard.receiveAttack(9, 9)).toBeFalsy(); // even if there is no ship on it
         });
     });
 });
