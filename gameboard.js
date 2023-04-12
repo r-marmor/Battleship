@@ -1,5 +1,3 @@
-const Ship = require('./ship.js');
-
 const BOARD_SIZE = 10;
 
 function Gameboard() {
@@ -17,41 +15,30 @@ function Gameboard() {
         patrolBoat: 2
     };
 
-    // caps the number of ships we can place on board
-    const maxShipsOnBoard = Object.values(maxPerShip).reduce((a, b) => a + b);
+    let shipsCount = 0;
+    let shipsSunk = 0;
 
-    // to start the game, checks if at least 1 ship isn't sunk
-    // const startGame = () => {
-    //     if (isAllShipsSunk()) return false;
-    // };
+    // checks if starting coordinates are inbounds
+    const isOutbounds = (x, y) => {
+        return (x < 0 || BOARD_SIZE <= x || y < 0 || BOARD_SIZE <= y);
+    };
     
-    // checks if all ships are sunk
-    // const isAllShipsSunk = () => {
-        // checks if no ship has been created yet
-    //     if (shipsOnBoard.size !== 0) {
-    //         const ships = Array.from(shipsOnBoard.keys());
-    //         return ships.every(ship => ship.isSunk() == true);
-    //     } else {
-    //         return false;
-    //     }
-    // };
-
     const placeShip = (ship, startPosX, startPosY) => {
-        // checks if starting coordinates are inbounds
-        if (startPosX < 0 || BOARD_SIZE <= startPosX || startPosY < 0 || BOARD_SIZE <= startPosY)
+        if (isOutbounds(startPosX, startPosY)) {
             throw new Error("coordinates are outbounds");
+        }
+    
         // tracks the fleet created in a Map
         // caps the creation of ships
         
         // if 1st instanciation of a ship type, create one
-        const currentCount = shipsOnBoard.get(ship) || 0;
-        if (currentCount < maxPerShip[ship.getId()] && !shipsOnBoard.has(ship.getId())) {
-            shipsOnBoard.set(ship, currentCount + 1);
+        // otherwise, just increment his number
+        const currentCount = shipsOnBoard.get(ship.getId()) || 0;
+        if (currentCount < maxPerShip[ship.getId()]) {
+            shipsOnBoard.set(ship.getId(), currentCount + 1);
         } else {
             return false;
         }
-
-        console.log(shipsOnBoard);
 
         // get ship properties
         const shipLength = ship.getLength();
@@ -69,9 +56,10 @@ function Gameboard() {
                 for (let i = 0; i < shipLength; i++) {
                     _board[startPosX][startPosY + i] = ship;
                 }
+                shipsCount++;
+                return true;
             } else {
                 throw new Error("ships can't overlap");
-                
             }
         // same statements as above with vertical direction
         } else if (direction === "vertical" && startPosX + shipLength <= BOARD_SIZE) {
@@ -83,6 +71,8 @@ function Gameboard() {
                     for (let i = 0; i < shipLength; i++) {
                         _board[startPosX + i][startPosY] = ship;
                     }
+                    shipsCount++;
+                    return true;
                 } else {
                     throw new Error("ships can't overlap");
                 }
@@ -94,12 +84,16 @@ function Gameboard() {
     let missShots = []; // records missed shots
 
     const receiveAttack = (x, y) => {
-        let squareShoted = _board[x][y];
-        if (squareShoted === "O" || squareShoted === "X") return;
+        let squareShot = _board[x][y];
+        if (squareShot === "O" || squareShot === "X") return;
         // if shot hit a ship, call the hit function to the ship hit
-        if (squareShoted !== null) {
+        if (squareShot !== null) {
             _board[x][y] = "O";
-            squareShoted.hit();
+            squareShot.hit();
+            if (squareShot.isSunk()) {
+                shipsSunk++;
+                isGameOver();
+            }
             return true;
         } else {
             // if a shot miss, mark the square, store the coordinates
@@ -109,31 +103,11 @@ function Gameboard() {
         }
     };
 
-    return { getBoard, placeShip, receiveAttack };
+    const isGameOver = () => {
+        return shipsSunk === shipsCount;
+    };
+
+    return { getBoard, placeShip, receiveAttack, isGameOver };
 }
-
-// const gameboard = Gameboard();
-// const ship1 = Ship('patrolBoat');
-// gameboard.placeShip(ship1, 0, 0);
-
-            const gameboard = Gameboard();
-            // const ship1 = Ship('patrolBoat');
-            // const ship2 = Ship('patrolBoat');
-            const ship3 = Ship('carrier');
-            const ship4 = Ship('carrier');
-            // const ship5 = Ship('submarine');
-            // const ship6 = Ship('submarine');
-            // const ship7 = Ship('destroyer');
-
-            // gameboard.placeShip(ship1, 0, 0);
-            // gameboard.placeShip(ship2, 1, 0);
-            gameboard.placeShip(ship3, 2, 0);
-            // gameboard.placeShip(ship4, 3, 0);
-            // gameboard.placeShip(ship5, 4, 0);
-            // gameboard.placeShip(ship6, 5, 0);
-            // gameboard.placeShip(ship7, 6, 0);
-            // gameboard.placeShip(ship3, 7, 0);
-
-
 
 module.exports = Gameboard;

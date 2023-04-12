@@ -1,12 +1,9 @@
-const Player = (playerName) => {
+const createPlayer = (playerName) => {
 
-    const name = playerName;
+    const name = playerName || "*Generate rdm player name*";
     const getName = () => name;
 
-    const landShot = (x, y) => {
-        
-    };
-
+    
 
     return { getName };
 
