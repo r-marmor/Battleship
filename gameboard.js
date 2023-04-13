@@ -1,4 +1,6 @@
-const BOARD_SIZE = 10;
+const Ship = require("./ship");
+
+const BOARD_SIZE = 10; // need to check how to export that const
 
 function Gameboard() {
     // create a standard 10*10 gameboard 
@@ -6,6 +8,7 @@ function Gameboard() {
     const getBoard = () => _board;
     // tracks ships placed on board
     const shipsOnBoard = new Map();
+
     // number max of ships by type
     const maxPerShip = {
         carrier: 1,
@@ -15,8 +18,10 @@ function Gameboard() {
         patrolBoat: 2
     };
 
-    let shipsCount = 0;
-    let shipsSunk = 0;
+    const maxShipsOnBoard = Object.values(maxPerShip).reduce((prev, curr) => prev + curr); // max size fleet
+    
+    let shipsCount = 0; // tracks the fleet size
+    let shipsSunk = 0; // tracks the remaining ships not sunk
 
     // checks if starting coordinates are inbounds
     const isOutbounds = (x, y) => {
@@ -24,12 +29,10 @@ function Gameboard() {
     };
     
     const placeShip = (ship, startPosX, startPosY) => {
-        if (isOutbounds(startPosX, startPosY)) {
-            throw new Error("coordinates are outbounds");
-        }
-    
-        // tracks the fleet created in a Map
-        // caps the creation of ships
+        
+        if (isFleetCreated()) throw new Error("Your fleet is full");
+        
+        if (isOutbounds(startPosX, startPosY)) throw new Error("coordinates are outbounds");
         
         // if 1st instanciation of a ship type, create one
         // otherwise, just increment his number
@@ -39,7 +42,6 @@ function Gameboard() {
         } else {
             return false;
         }
-
         // get ship properties
         const shipLength = ship.getLength();
         const direction = ship.getDirection();
@@ -85,13 +87,15 @@ function Gameboard() {
 
     const receiveAttack = (x, y) => {
         let squareShot = _board[x][y];
-        if (squareShot === "O" || squareShot === "X") return;
+        if (squareShot === "O" || squareShot === "X") throw new Error("Can't shot twice a square already hit");
         // if shot hit a ship, call the hit function to the ship hit
         if (squareShot !== null) {
             _board[x][y] = "O";
+            console.log("YOU HIT A SHIP");
             squareShot.hit();
             if (squareShot.isSunk()) {
                 shipsSunk++;
+                console.log("SHIP'S SUNK");
                 isGameOver();
             }
             return true;
@@ -104,10 +108,23 @@ function Gameboard() {
     };
 
     const isGameOver = () => {
-        return shipsSunk === shipsCount;
+        if (shipsSunk === shipsCount) {
+            console.log("All your ships are sunk");
+            return true;
+        } else {
+        return false;
+        }
     };
 
-    return { getBoard, placeShip, receiveAttack, isGameOver };
+    const isFleetCreated = () => {
+       return shipsCount === maxShipsOnBoard;
+    };
+
+    return { getBoard, placeShip, receiveAttack, isGameOver, isFleetCreated, getShipsOnBoard };
 }
+
+const test = Gameboard();
+test.placeShip("carrier", 0, 0);
+test.getShipsOnBoard();
 
 module.exports = Gameboard;
