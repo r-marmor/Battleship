@@ -9,10 +9,11 @@ function Player (playerName, board, type = "human") {
 
     const getName = () => name;
     const getType = () => type;
-    const getBoard = () => board;
+    const getPlayerBoard = () => board;
 
     // if player is human
     const attackEnnemyBoard = (x, y, ennemyBoard) => {
+        if (ennemyBoard === board) throw new Error("You can't shot at your own board!");
         ennemyBoard.receiveAttack(x, y);
         console.log("You shot at ennemyboard!");
         return true;
@@ -26,26 +27,16 @@ function Player (playerName, board, type = "human") {
     const autoAttack = (playerBoard) => {
         const [x, y] = randCoord();
         playerBoard.receiveAttack(x, y);
-        return true;
     };
 
-    
-    const autoPlaceShip = (type) => { // à mettre dans helpers fn
-        placeShip(type, randCoord(), randCoord());
-        return true;
-    };
-   
-
-    return { getName, getBoard, randNum, randCoord, getType, autoAttack, attackEnnemyBoard, createFleet };
+    return { getName,
+             getType,
+             getPlayerBoard,
+             randNum, 
+             randCoord, 
+             autoAttack, 
+             attackEnnemyBoard
+            };
 }
-
-const SHIP_TYPES = [
-    'carrier',
-    'battleship',
-    'destroyer',
-    'submarine',
-    'patrolBoat'
-];
-
 
 module.exports = Player;

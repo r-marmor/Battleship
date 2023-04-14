@@ -21,6 +21,7 @@ function Gameboard() {
     const maxShipsOnBoard = Object.values(maxPerShip).reduce((prev, curr) => prev + curr); // max size fleet
     
     let shipsCount = 0; // tracks the fleet size
+    const getShipsCount = () => shipsCount;
     let shipsSunk = 0; // tracks the remaining ships not sunk
 
     // checks if starting coordinates are inbounds
@@ -120,11 +121,7 @@ function Gameboard() {
        return shipsCount === maxShipsOnBoard;
     };
 
-    return { getBoard, placeShip, receiveAttack, isGameOver, isFleetCreated, getShipsOnBoard };
+    return { getBoard, placeShip, receiveAttack, isGameOver, isFleetCreated, getShipsCount };
 }
-
-const test = Gameboard();
-test.placeShip("carrier", 0, 0);
-test.getShipsOnBoard();
 
 module.exports = Gameboard;
