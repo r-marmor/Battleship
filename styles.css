@@ -1,0 +1,95 @@
+/* Minimal CSS reset. Source : digitalocean.com */
+
+html {
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+  
+  body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+  }
+  
+  ol, ul {
+    list-style: none;
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+/* header */
+header {
+    background-color: bisque;
+    height: 5vh;
+}
+/* main */
+
+main {
+    background-color:aliceblue;
+    height: 90vh;
+    width: 100vw;
+}
+
+.gameboards-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    height: 95%;
+}
+
+.btn-container {
+  height: 5%;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-start-game {
+  margin: 10px 0;
+}
+
+.p1-container {
+  margin: 50px 0;
+  display: flex;
+  flex-wrap: wrap;
+  width: 40%;
+}
+
+.p2-container {
+  margin: 50px 0;
+  display: flex;
+  flex-wrap: wrap;
+  width: 40%;
+}
+
+.p1_div {
+  height: calc(100% / 10);
+  width: calc(100% / 10);
+  border: solid 1px black;
+}
+
+.p2_div {
+  height: calc(100% / 10);
+  width: calc(100% / 10);
+  border: solid 1px black;
+}
+
+.p1_div:hover {
+  background-color: bisque;
+}
+
+.p2_div:hover {
+  background-color: red;
+}
+
+/* footer */
+footer {
+    background-color: beige;
+    height: 5vh;
+}

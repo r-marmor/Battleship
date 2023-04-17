@@ -1,6 +1,4 @@
-const Ship = require("./ship");
-
-const BOARD_SIZE = 10; // need to check how to export that const
+const { BOARD_SIZE, maxPerShip, isOutbounds } = require('./helpers/helpers');
 
 function Gameboard() {
     // create a standard 10*10 gameboard 
@@ -9,26 +7,12 @@ function Gameboard() {
     // tracks ships placed on board
     const shipsOnBoard = new Map();
 
-    // number max of ships by type
-    const maxPerShip = {
-        carrier: 1,
-        battleship: 1,
-        destroyer: 1,
-        submarine: 2,
-        patrolBoat: 2
-    };
-
-    const maxShipsOnBoard = Object.values(maxPerShip).reduce((prev, curr) => prev + curr); // max size fleet
+    // max size fleet
+    const maxShipsOnBoard = Object.values(maxPerShip).reduce((prev, curr) => prev + curr); 
     
     let shipsCount = 0; // tracks the fleet size
-    const getShipsCount = () => shipsCount;
     let shipsSunk = 0; // tracks the remaining ships not sunk
 
-    // checks if starting coordinates are inbounds
-    const isOutbounds = (x, y) => {
-        return (x < 0 || BOARD_SIZE <= x || y < 0 || BOARD_SIZE <= y);
-    };
-    
     const placeShip = (ship, startPosX, startPosY) => {
         
         if (isFleetCreated()) throw new Error("Your fleet is full");
@@ -121,7 +105,7 @@ function Gameboard() {
        return shipsCount === maxShipsOnBoard;
     };
 
-    return { getBoard, placeShip, receiveAttack, isGameOver, isFleetCreated, getShipsCount };
+    return { getBoard, placeShip, receiveAttack, isGameOver, isFleetCreated };
 }
 
 module.exports = Gameboard;

@@ -1,7 +1,6 @@
+const { BOARD_SIZE, randNum } = require('./helpers/helpers')
 const Gameboard = require("./gameBoard");
 const Ship = require('./ship');
-
-const BOARD_SIZE = 10; // need to check how to export that const
 
 function Player (playerName, board, type = "human") {
 
@@ -19,21 +18,15 @@ function Player (playerName, board, type = "human") {
         return true;
     };
 
-    // generate rdm coord when CPU attacks => need to be externalised
-    const randNum = () => Math.floor(Math.random() * BOARD_SIZE);
-    const randCoord = () => [randNum(BOARD_SIZE), randNum(BOARD_SIZE)];
-
     // if player is a CPU
     const autoAttack = (playerBoard) => {
-        const [x, y] = randCoord();
-        playerBoard.receiveAttack(x, y);
+        playerBoard.receiveAttack(randNum(), randNum());
     };
 
     return { getName,
              getType,
              getPlayerBoard,
-             randNum, 
-             randCoord, 
+             randNum,  
              autoAttack, 
              attackEnnemyBoard
             };

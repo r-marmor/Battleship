@@ -1,26 +1,18 @@
+const { SHIP_TYPES, BOARD_SIZE, randNum } = require('./helpers/helpers')
 const Gameboard = require("./gameBoard");
 const Player = require("./players");
 const Ship = require("./ship");
 
-const SHIP_TYPES = [
-   'carrier',
-   'battleship',
-   'destroyer',
-   'submarine',
-   'patrolBoat'
-];
-
-const BOARD_SIZE = 10;
-
- // generate rdm coord when CPU attacks => need to be externalised
- const randNum = () => Math.floor(Math.random() * BOARD_SIZE);
- const randCoord = () => [randNum(BOARD_SIZE), randNum(BOARD_SIZE)];
 
 const Game = () => {
 
    // create boards
    const p1Board = Gameboard();
    const cpuBoard = Gameboard();
+
+   // create players
+   const p1 = Player("Michel", p1Board, "human");
+   const p2 = Player("cpu123", cpuBoard, "cpu");
 
    // player fleet
    const ship1 = Ship("patrolBoat");
@@ -56,10 +48,7 @@ const Game = () => {
    cpuBoard.placeShip(cpuShip3, 4, 0);
    cpuBoard.placeShip(cpuShip4, 5, 0);
    cpuBoard.placeShip(cpuShip5, 6, 0); 
-  
-   // create players
-   const p1 = Player("Michel", p1Board, "human");
-   const p2 = Player("cpu123", cpuBoard, "cpu");
+
 
 };
 
