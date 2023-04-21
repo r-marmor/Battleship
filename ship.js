@@ -1,6 +1,6 @@
-const { SHIP_LENGTH } = require('./helpers/helpers.js');
+import { SHIP_LENGTH } from './helpers/helpers.js';
 
-function Ship(type) {
+export default function Ship(type) {
     // properties
     const id = type;
     const length = SHIP_LENGTH[type];
@@ -34,5 +34,3 @@ function Ship(type) {
 
     return { hit, getHits, isSunk, getId, getLength, getDirection, changeDirection };
 }
-
-module.exports = Ship;

@@ -1,5 +1,5 @@
-const Player = require('../players');
-const Gameboard = require('../gameBoard');
+import Player from '../players';
+import Gameboard from '../gameboard';
 
 describe('Player()', () => {
     test('Creates a player with inputed name', () => {

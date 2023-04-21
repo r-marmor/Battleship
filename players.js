@@ -1,8 +1,8 @@
-const { BOARD_SIZE, randNum } = require('./helpers/helpers')
-const Gameboard = require("./gameBoard");
-const Ship = require('./ship');
+import {BOARD_SIZE, randNum} from './helpers/helpers.js';
+import { Gameboard } from"./gameboard.js";
+import Ship from './ship.js';
 
-function Player (playerName, board, type = "human") {
+export default function Player (playerName, board, type = "human") {
 
     const name = playerName || "*Generate rdm player name*";
 
@@ -31,5 +31,3 @@ function Player (playerName, board, type = "human") {
              attackEnnemyBoard
             };
 }
-
-module.exports = Player;

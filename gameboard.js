@@ -1,12 +1,12 @@
-const { BOARD_SIZE, maxPerShip, isOutbounds } = require('./helpers/helpers');
+import { BOARD_SIZE, maxPerShip, isOutbounds } from './helpers/helpers.js';
 
-function Gameboard() {
+export default function Gameboard() {
     // create a standard 10*10 gameboard 
     let _board = new Array(BOARD_SIZE).fill(null).map(() => new Array(BOARD_SIZE).fill(null));
     const getBoard = () => _board;
+
     // tracks ships placed on board
     const shipsOnBoard = new Map();
-
     // max size fleet
     const maxShipsOnBoard = Object.values(maxPerShip).reduce((prev, curr) => prev + curr); 
     
@@ -108,4 +108,4 @@ function Gameboard() {
     return { getBoard, placeShip, receiveAttack, isGameOver, isFleetCreated };
 }
 
-module.exports = Gameboard;
+

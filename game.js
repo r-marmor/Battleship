@@ -1,18 +1,29 @@
-const { SHIP_TYPES, BOARD_SIZE, randNum } = require('./helpers/helpers')
-const Gameboard = require("./gameBoard");
-const Player = require("./players");
-const Ship = require("./ship");
+import Gameboard from "./gameboard.js";
+import Player from "./players.js";
+import Ship from "./ship.js";
 
-
-const Game = () => {
+export default function Game() {
 
    // create boards
-   const p1Board = Gameboard();
-   const cpuBoard = Gameboard();
+   let player1;
+   let player2;
+
+   const p1Board = player1.getBoard();
+   const p2Board = player2.getBoard();
+
+   const getp1Board = () => p1Board;
+   const getp2Board = () => p2Board;
+
+   // Reset and start a new game
+   const newGame = () => {
+      player1 = Gameboard();
+      player2 = Gameboard();
+   };
 
    // create players
-   const p1 = Player("Michel", p1Board, "human");
-   const p2 = Player("cpu123", cpuBoard, "cpu");
+
+   // const p1 = Player("Michel", player1, "human");
+   // const p2 = Player("cpu123", player2, "cpu");
 
    // player fleet
    const ship1 = Ship("patrolBoat");
@@ -22,15 +33,14 @@ const Game = () => {
    const ship3 = Ship("destroyer");
    const ship4 = Ship("battleship");
    const ship5 = Ship("carrier");
-   const ship6 = Ship("submarine");
 
-   p1Board.placeShip(ship1, 0, 0);
-   p1Board.placeShip(ship1a, 1, 0);
-   p1Board.placeShip(ship2, 2, 0);
-   p1Board.placeShip(ship2a, 3, 0);
-   p1Board.placeShip(ship3, 4, 0);
-   p1Board.placeShip(ship4, 5, 0);
-   p1Board.placeShip(ship5, 6, 0);  
+   player1.placeShip(ship1, 0, 0);
+   player1.placeShip(ship1a, 1, 0);
+   player1.placeShip(ship2, 2, 0);
+   player1.placeShip(ship2a, 3, 0);
+   player1.placeShip(ship3, 4, 0);
+   player1.placeShip(ship4, 5, 0);
+   player1.placeShip(ship5, 6, 0);  
 
    // cpu fleet 
    const cpuShip1 = Ship("patrolBoat");
@@ -41,15 +51,17 @@ const Game = () => {
    const cpuShip4 = Ship("battleship");
    const cpuShip5 = Ship("carrier");
 
-   cpuBoard.placeShip(cpuShip1, 0, 0);
-   cpuBoard.placeShip(cpuShip1a, 1, 0);
-   cpuBoard.placeShip(cpuShip2, 2, 0);
-   cpuBoard.placeShip(cpuShip2a, 3, 0);
-   cpuBoard.placeShip(cpuShip3, 4, 0);
-   cpuBoard.placeShip(cpuShip4, 5, 0);
-   cpuBoard.placeShip(cpuShip5, 6, 0); 
+   player2.placeShip(cpuShip1, 0, 0);
+   player2.placeShip(cpuShip1a, 1, 0);
+   player2.placeShip(cpuShip2, 2, 0);
+   player2.placeShip(cpuShip2a, 3, 0);
+   player2.placeShip(cpuShip3, 4, 0);
+   player2.placeShip(cpuShip4, 5, 0);
+   player2.placeShip(cpuShip5, 6, 0); 
 
+   return { newGame, getp1Board, getp2Board };
 
-};
+}
 
-Game();
+const test = Game();
+console.log(test)

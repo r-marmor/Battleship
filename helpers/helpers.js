@@ -35,11 +35,11 @@ const isOutbounds = (x, y) => {
     return (x < 0 || BOARD_SIZE <= x || y < 0 || BOARD_SIZE <= y);
 };
 
- // generate rdm coord when CPU attacks => need to be externalised
+ // generate rdm coord when CPU attacks
  const randNum = () => Math.floor(Math.random() * BOARD_SIZE);
 
-const isGameOver = () => {
-    if (shipsSunk === shipsCount) {
+const isGameOver = (x, y) => {
+    if (x === y) {
         console.log("All your ships are sunk");
         return true;
     } else {
@@ -51,7 +51,7 @@ const isFleetCreated = () => {
     return shipsCount === maxShipsOnBoard;
  };
 
-module.exports = {
+export {
     isOutbounds,
     randNum,
     isGameOver,
