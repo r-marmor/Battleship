@@ -15,7 +15,6 @@ export default function Game(player1Type, player2Type) {
    const getp1Board = () => p1.getBoard();
    const getp2Board = () => p2.getBoard();
 
-
    // player fleet
    const ship1 = Ship("patrolBoat");
    const ship1a = Ship("patrolBoat");
