@@ -1,5 +1,5 @@
 import {BOARD_SIZE, randNum} from './helpers/helpers.js';
-import { Gameboard } from"./gameboard.js";
+import Gameboard  from"./gameboard.js";
 import Ship from './ship.js';
 
 export default function Player (playerName, board, type = "human") {

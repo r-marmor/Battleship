@@ -76,11 +76,9 @@ export default function Gameboard() {
         // if shot hit a ship, call the hit function to the ship hit
         if (squareShot !== null) {
             _board[x][y] = "O";
-            console.log("YOU HIT A SHIP");
             squareShot.hit();
             if (squareShot.isSunk()) {
                 shipsSunk++;
-                console.log("SHIP'S SUNK");
                 isGameOver();
             }
             return true;

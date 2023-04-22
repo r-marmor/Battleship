@@ -1,5 +1,5 @@
-import Player from '../players';
-import Gameboard from '../gameboard';
+import Player from './players';
+import Gameboard from './gameboard';
 
 describe('Player()', () => {
     test('Creates a player with inputed name', () => {

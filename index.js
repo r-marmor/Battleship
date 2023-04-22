@@ -1,42 +1,69 @@
 import Game from './game.js';
 import { BOARD_SIZE } from './helpers/helpers.js';
-import Player from './players.mjs';
+
+const gameboardsContainer = document.querySelector('.gameboards-container');
+
+const createBoards = () => {
+    const divp1 = document.createElement('div');
+    divp1.classList.add('p1-container');
+
+    const divp2 = document.createElement('div');
+    divp2.classList.add('p2-container');
+
+    gameboardsContainer.appendChild(divp1);
+    gameboardsContainer.appendChild(divp2);
+};
+
+createBoards();
 
 
 const p1Container = document.querySelector('.p1-container');
 const p2Container = document.querySelector('.p2-container');
 
-const game = Game();
+const switchPlayerBtn = document.querySelector('.switch_player');
 
-const p1 = Player("Michel", player1, "human");
-const p2 = Player("cpu123", player2, "cpu");
+const game = Game("human", "cpu");
 
-game.newGame();
+const p1Board = game.getp1Board();
+const p2Board = game.getp2Board();
 
-const player1Board = game.getp1Board();
-const player2Board = game.getp2Board();
 
-// create player 1 gameboard
-for (let i = BOARD_SIZE - 1; i >= 0; i--) {
-    for (let j = 0; j < BOARD_SIZE; j++) {
-        const divs = document.createElement('div');
-        divs.classList.add('p1_div');
-        divs.dataset.row = i;
-        divs.dataset.col = j;
-        if (player1Board[i][j] !== null) {
-        document.querySelector(`[data-row="${i}"][data-col="${j}"]`).style.backgroundColor = "black";
+switchPlayerBtn.addEventListener('click', () => {
+    clearBoards();
+    createBoards();
+    setGameboards(p2Board, p1Board);
+});
+  
+
+// create gameboards
+const setGameboards = (leftBoard, rightBoard) => {
+    for (let i = BOARD_SIZE - 1; i >= 0; i--) {
+        for (let j = 0; j < BOARD_SIZE; j++) {
+            // p1 board
+            const divp1 = document.createElement('div');
+            divp1.classList.add('p1_div');
+            divp1.dataset.row = i;
+            divp1.dataset.col = j;
+            // p2 board
+            const divp2 = document.createElement('div');
+            divp2.classList.add('p2_div');
+            divp2.dataset.row = i;
+            divp2.dataset.col = j;
+            // display ships on board for player 1
+            if (leftBoard[i][j] !== null) {
+            divp1.style.backgroundColor = "black";
+            divp1.style.border = "1px solid white";
+            }
+            // if (rightBoard[i][j] == "X") {
+            //     divp2.style.backgroundColor = "red";
+            // } else if (rightBoard[i][j] == "O") {
+            //     divp2.style.backgroundColor = "green";
+            // }
+            p1Container.appendChild(divp1);
+            p2Container.appendChild(divp2);
         }
-        p1Container.appendChild(divs);
     }
-}
+};
 
-// create player 2 gameboard
-for (let i = BOARD_SIZE - 1; i >= 0 ; i--) {
-    for (let j = 0; j < BOARD_SIZE; j++) {
-        const divs = document.createElement('div');
-        divs.classList.add('p2_div');
-        divs.dataset.row = i;
-        divs.dataset.col = j;
-        p2Container.appendChild(divs);
-    }
-}
+setGameboards(p1Board, p2Board);
+
