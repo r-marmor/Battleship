@@ -92,7 +92,6 @@ export default function Gameboard() {
 
     const isGameOver = () => {
         if (shipsSunk === shipsCount) {
-            console.log("All your ships are sunk");
             return true;
         } else {
         return false;

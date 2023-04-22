@@ -37,7 +37,7 @@ main {
     width: 100vw;
 }
 
-.gameboards-container {
+#gameboards-container {
     display: flex;
     justify-content: center;
     gap: 50px;

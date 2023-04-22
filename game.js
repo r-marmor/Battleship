@@ -15,8 +15,6 @@ export default function Game(player1Type, player2Type) {
    const getp1Board = () => p1.getBoard();
    const getp2Board = () => p2.getBoard();
 
-   // const player1 = Player("Michel", p1, player1Type);
-   // const player2 = Player("cpu123", p2, player2Type);
 
    // player fleet
    const ship1 = Ship("patrolBoat");
@@ -55,43 +53,64 @@ export default function Game(player1Type, player2Type) {
    const turnMessage = document.querySelector('.message');
    const p2Container = document.querySelector('.p2-container');
    const p1Container = document.querySelector('.p1-container');
-   const p1ShotMessage = document.querySelector('.player1-message')
-
-         turnMessage.textContent = "It's player 1 turn to attack";
+   const p1ShotMessage = document.querySelector('.player1-message');
+   const p2ShotMessage = document.querySelector('.player2-message');
          
-         p2Container.addEventListener("click", e => {
-            if (e.target.matches(".p2_div")) {
-               const row = e.target.dataset.row;
-               const col = e.target.dataset.col;
+      p2Container.addEventListener("click", e => {
+         if (e.target.matches(".p2_div")) {
+            const row = e.target.dataset.row;
+            const col = e.target.dataset.col;
 
-               getp2().receiveAttack(row, col);
-               
-               const divp2 = p2Container.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-               const boardCellp2 = getp2().getBoard()[row][col];
-
-               if (boardCellp2 === "O") {
-                  divp2.textContent = "O";
-                  divp2.style.backgroundColor = "green";
-                  p1ShotMessage.textContent = "You hit a ship!";
-               } else {
-                  divp2.textContent = "X";
-                  divp2.style.backgroundColor = "red";
-                  p1ShotMessage.textContent = "Your shot missed!";
+            getp2().receiveAttack(row, col);
+                  
+            const divp2 = p2Container.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+            const boardCellp2 = getp2().getBoard()[row][col];
+            
+            if (boardCellp2 === "O") {
+               divp2.textContent = "O";
+               divp2.style.backgroundColor = "green";
+               p1ShotMessage.textContent = "You hit a ship!";
+               if (getp2().isGameOver()) {
+                  turnMessage.textContent = "All CPU' ships are sunk, you won!";
+                  return;
                }
+            } else {
+               divp2.textContent = "X";
+               divp2.style.backgroundColor = "red";
+               p1ShotMessage.textContent = "Your shot missed!";
+            }
 
                turnMessage.textContent = "It's CPU's turn to attack!";
-
-               if (player2Type === "cpu") {
-                  let x = randNum();
-                  let y = randNum();
-                  getp1().receiveAttack(x, y);
-                  
-               }
             }
-         });
+
+            if (player2Type === "cpu") {
+               let x = randNum();
+               let y = randNum();
+               getp1().receiveAttack(x, y);
+   
+               const divp1 = p1Container.querySelector(`[data-row="${x}"][data-col="${y}"]`);
+               const boardCellp1 = getp1().getBoard()[x][y];
+   
+               if (boardCellp1 === "O") {
+                  divp1.textContent = "O";
+                  divp1.style.backgroundColor = "green";
+                  p2ShotMessage.textContent = "CPU's hit your ship!";
+                  if (getp1().isGameOver()) {
+                     turnMessage.textContent = "All your ships are sunk, CPU won!";
+                     return;
+                  }
+               
+               } else {
+                  divp1.textContent = "X";
+                  divp1.style.backgroundColor = "red";
+                  p2ShotMessage.textContent = "CPU has missed!";
+               }
+
+               turnMessage.textContent = "It's player 1 turn to attack";
+            }
+      });
 
          
       
-   return { getp1Board, getp2Board, getp1, getp2 };
-
+      return { getp1Board, getp2Board, getp1, getp2 };
 }
