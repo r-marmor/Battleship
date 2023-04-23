@@ -9,11 +9,9 @@ export default function Player (playerName, gameboard, type = "human") {
     const getName = () => name;
     const getType = () => type;
     const getPlayerGameboard = () => gameboard;
+    const getPlayerBoard = () => gameboard.getBoard();
 
 
-    return { getName,
-             getType,
-             getPlayerGameboard,
-             randNum
-            };
+    return { getName, getType, getPlayerGameboard, getPlayerBoard };
+    
 }

@@ -89,6 +89,7 @@ const isFleetCreated = () => {
     p2board.placeShip(cpuShip5, 6, 0);
  };
 
+
 export {
     isOutbounds,
     randNum,
