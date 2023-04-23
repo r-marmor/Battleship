@@ -1,115 +1,83 @@
 import Gameboard from "./gameboard.js";
-import { randNum } from "./helpers/helpers.js";
+import { populateBoards } from "./helpers/helpers.js";
 import Player from "./players.js";
-import Ship from "./ship.js";
 
-export default function Game(player1Type, player2Type) {
+export default function Game() {
 
-   // create boards
-   const p1 = Gameboard();
-   const p2 = Gameboard();
+   const p1Gameboard = Gameboard();
+   const p2Gameboard = Gameboard();
 
-   const getp1 = () => p1;
-   const getp2 = () => p2;
+   const player1 = Player('Michel', p1Gameboard, "human");
+   const player2 = Player('cpu123', p2Gameboard, "cpu");
 
-   const getp1Board = () => p1.getBoard();
-   const getp2Board = () => p2.getBoard();
+   const getPlayer1 = () => player1;
+   const getPlayer2 = () => player2;
 
-   // player fleet
-   const ship1 = Ship("patrolBoat");
-   const ship1a = Ship("patrolBoat");
-   const ship2 = Ship("submarine");
-   const ship2a = Ship("submarine");
-   const ship3 = Ship("destroyer");
-   const ship4 = Ship("battleship");
-   const ship5 = Ship("carrier");
-
-   p1.placeShip(ship1, 0, 0);
-   p1.placeShip(ship1a, 1, 0);
-   p1.placeShip(ship2, 2, 0);
-   p1.placeShip(ship2a, 3, 0);
-   p1.placeShip(ship3, 4, 0);
-   p1.placeShip(ship4, 5, 0);
-   p1.placeShip(ship5, 6, 0);  
-
-   // cpu fleet 
-   const cpuShip1 = Ship("patrolBoat");
-   const cpuShip1a = Ship("patrolBoat");
-   const cpuShip2 = Ship("submarine");
-   const cpuShip2a = Ship("submarine");
-   const cpuShip3 = Ship("destroyer");
-   const cpuShip4 = Ship("battleship");
-   const cpuShip5 = Ship("carrier");
-
-   p2.placeShip(cpuShip1, 0, 0);
-   p2.placeShip(cpuShip1a, 1, 0);
-   p2.placeShip(cpuShip2, 2, 2);
-   p2.placeShip(cpuShip2a, 3, 0);
-   p2.placeShip(cpuShip3, 4, 0);
-   p2.placeShip(cpuShip4, 5, 0);
-   p2.placeShip(cpuShip5, 6, 0);
+   populateBoards(p1Gameboard, p2Gameboard); 
 
    const turnMessage = document.querySelector('.message');
-   const p2Container = document.querySelector('.p2-container');
-   const p1Container = document.querySelector('.p1-container');
-   const p1ShotMessage = document.querySelector('.player1-message');
-   const p2ShotMessage = document.querySelector('.player2-message');
-         
-      p2Container.addEventListener("click", e => {
-         if (e.target.matches(".p2_div")) {
-            const row = e.target.dataset.row;
-            const col = e.target.dataset.col;
+const p2Container = document.querySelector('.p2-container');
+const p1Container = document.querySelector('.p1-container');
+const p1ShotMessage = document.querySelector('.player1-message');
+const p2ShotMessage = document.querySelector('.player2-message');
+      
+   p2Container.addEventListener("click", e => {
+      if (e.target.matches(".p2_div")) {
+         const row = e.target.dataset.row;
+         const col = e.target.dataset.col;
 
-            getp2().receiveAttack(row, col);
-                  
-            const divp2 = p2Container.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-            const boardCellp2 = getp2().getBoard()[row][col];
-            
-            if (boardCellp2 === "O") {
-               divp2.textContent = "O";
-               divp2.style.backgroundColor = "green";
-               p1ShotMessage.textContent = "You hit a ship!";
-               if (getp2().isGameOver()) {
-                  turnMessage.textContent = "All CPU' ships are sunk, you won!";
+         getp2().receiveAttack(row, col);
+               
+         const divp2 = p2Container.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+         const boardCellp2 = getp2().getBoard()[row][col];
+         
+         if (boardCellp2 === "O") {
+            divp2.textContent = "O";
+            divp2.style.backgroundColor = "green";
+            p1ShotMessage.textContent = "You hit a ship!";
+            if (getp2().isGameOver()) {
+               turnMessage.textContent = "All CPU' ships are sunk, you won!";
+               return;
+            }
+         } else {
+            divp2.textContent = "X";
+            divp2.style.backgroundColor = "red";
+            p1ShotMessage.textContent = "Your shot missed!";
+         }
+
+            turnMessage.textContent = "It's CPU's turn to attack!";
+         }
+
+         if (player2.getType() === "cpu") {
+            let x = randNum();
+            let y = randNum();
+            getp1().receiveAttack(x, y);
+
+            const divp1 = p1Container.querySelector(`[data-row="${x}"][data-col="${y}"]`);
+            const boardCellp1 = getp1().getBoard()[x][y];
+
+            if (boardCellp1 === "O") {
+               divp1.textContent = "O";
+               divp1.style.backgroundColor = "green";
+               p2ShotMessage.textContent = "CPU's hit your ship!";
+               if (getp1().isGameOver()) {
+                  turnMessage.textContent = "All your ships are sunk, CPU won!";
                   return;
                }
+            
             } else {
-               divp2.textContent = "X";
-               divp2.style.backgroundColor = "red";
-               p1ShotMessage.textContent = "Your shot missed!";
+               divp1.textContent = "X";
+               divp1.style.backgroundColor = "red";
+               p2ShotMessage.textContent = "CPU has missed!";
             }
 
-               turnMessage.textContent = "It's CPU's turn to attack!";
-            }
+            turnMessage.textContent = "It's player 1 turn to attack";
+         }
+   });
 
-            if (player2Type === "cpu") {
-               let x = randNum();
-               let y = randNum();
-               getp1().receiveAttack(x, y);
-   
-               const divp1 = p1Container.querySelector(`[data-row="${x}"][data-col="${y}"]`);
-               const boardCellp1 = getp1().getBoard()[x][y];
-   
-               if (boardCellp1 === "O") {
-                  divp1.textContent = "O";
-                  divp1.style.backgroundColor = "green";
-                  p2ShotMessage.textContent = "CPU's hit your ship!";
-                  if (getp1().isGameOver()) {
-                     turnMessage.textContent = "All your ships are sunk, CPU won!";
-                     return;
-                  }
-               
-               } else {
-                  divp1.textContent = "X";
-                  divp1.style.backgroundColor = "red";
-                  p2ShotMessage.textContent = "CPU has missed!";
-               }
+   return { getPlayer1, getPlayer2 };
 
-               turnMessage.textContent = "It's player 1 turn to attack";
-            }
-      });
-
-         
-      
-      return { getp1Board, getp2Board, getp1, getp2 };
 }
+
+
+

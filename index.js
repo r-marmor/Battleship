@@ -1,8 +1,11 @@
 import Game from './game.js';
+import Gameboard from './gameboard.js';
+import Player from "./players.js";
 import { BOARD_SIZE } from './helpers/helpers.js';
 
 const gameboardsContainer = document.getElementById('gameboards-container');
 const startGameBtn = document.querySelector('.btn-start-game');
+const switchPlayerBtn = document.querySelector('.switch_player');
 
 // setup start game button
 startGameBtn.addEventListener('click', () => {
@@ -22,9 +25,9 @@ const createBoards = () => {
 
 createBoards();
 
-const switchPlayerBtn = document.querySelector('.switch_player');
+const game = Game("human", Player('cpu123', Gameboard(), "cpu"));
 
-const game = Game("human", "cpu");
+
 
 const p1Board = game.getp1Board();
 const p2Board = game.getp2Board();
@@ -88,6 +91,5 @@ const setGameboards = (leftBoard, rightBoard) => {
         }
     }
 };
-
 
 
