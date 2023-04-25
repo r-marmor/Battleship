@@ -23,7 +23,7 @@ startGameBtn.addEventListener('click', () => {
     setGameboards(p1Board, p2Board);
 });
 
-const createBoards = (() => {
+const createBoards = () => {
     const divp1 = document.createElement('div');
     divp1.classList.add('p1-container');
 
@@ -32,7 +32,9 @@ const createBoards = (() => {
 
     gameboardsContainer.appendChild(divp1);
     gameboardsContainer.appendChild(divp2);
-})();
+};
+
+createBoards();
 
 const clearBoards = () => {
     while (gameboardsContainer.firstChild) {

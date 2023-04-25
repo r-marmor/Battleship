@@ -4,8 +4,8 @@
 // keep track of missed attacks
 // report if all ships have been sunk or not
 
-import Gameboard from "./gameboard.js";
-import Ship from './ship';
+import Gameboard from "../gameboard";
+import Ship from '../ship';
 
 describe('Gameboard()', () => {
         const gameboard = Gameboard();
