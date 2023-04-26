@@ -1,4 +1,4 @@
-import { BOARD_SIZE, maxPerShip, isOutbounds } from './helpers/helpers.js';
+import { BOARD_SIZE, maxPerShip, isCoordOutbounds } from './helpers/helpers.js';
 
 export default function Gameboard() {
     // create a standard 10*10 gameboard 
@@ -14,12 +14,19 @@ export default function Gameboard() {
     let shipsSunk = 0; // tracks the remaining ships not sunk
 
     const placeShip = (ship, startPosX, startPosY) => {
+        // get ship properties
+        const shipLength = ship.getLength();
+        const direction = ship.getDirection();
         
         if (isFleetCreated()) throw new Error("Your fleet is full");
         
-        if (isOutbounds(startPosX, startPosY)) throw new Error("coordinates are outbounds");
+        if (isCoordOutbounds(startPosX, startPosY)) throw new Error("coordinates are outbounds");
         
-        // if 1st instanciation of a ship type, create one
+        if (!isShipInbounds(startPosX, startPosY, shipLength)) throw new Error("Ship is outbounds");
+
+        if (!isValidPlacement(ship, startPosX, startPosY, direction)) throw new Error("Ships can't overlap");
+
+
         // otherwise, just increment his number
         const currentCount = shipsOnBoard.get(ship.getId()) || 0;
         if (currentCount < maxPerShip[ship.getId()]) {
@@ -27,47 +34,22 @@ export default function Gameboard() {
         } else {
             return false;
         }
-        // get ship properties
-        const shipLength = ship.getLength();
-        const direction = ship.getDirection();
-        // check if ship is inbound
-        if (direction === "horizontal" && startPosY + shipLength <= BOARD_SIZE) {
-            // stores ship path for following if statement
-            const shipPath = []; 
+    
             for (let i = 0; i < shipLength; i++) {
-                shipPath.push(_board[startPosX][startPosY + i]);
-            }
-            // if all values are null = no ship is on the path
-            if (shipPath.every(val => val === null)) {
-                // then implements the new ship
-                for (let i = 0; i < shipLength; i++) {
-                    _board[startPosX][startPosY + i] = ship;
-                }
+                if (direction === "horizontal") {
+                        _board[startPosX][startPosY + i] = ship;    
+                    } else if (direction === "vertical") {
+                        _board[startPosX + i][startPosY] = ship;
+                        
+                    } else {
+                        return false;
+                    }
+                } 
                 shipsCount++;
                 return true;
-            } else {
-                throw new Error("ships can't overlap");
-            }
-        // same statements as above with vertical direction
-        } else if (direction === "vertical" && startPosX + shipLength <= BOARD_SIZE) {
-            const shipPath = [];
-                for (let i = 0; i < shipLength; i++) {
-                    shipPath.push(_board[startPosX + i][startPosY]);
-                }
-                if (shipPath.every(val => val === null)) {
-                    for (let i = 0; i < shipLength; i++) {
-                        _board[startPosX + i][startPosY] = ship;
-                    }
-                    shipsCount++;
-                    return true;
-                } else {
-                    throw new Error("ships can't overlap");
-                }
-        } else {
-            return false;
-        }
     };
-    
+        
+
     let missShots = []; // records missed shots
 
     const receiveAttack = (x, y) => {
@@ -91,17 +73,31 @@ export default function Gameboard() {
     };
 
     const isGameOver = () => {
-        if (shipsSunk === shipsCount) {
-            return true;
-        } else {
-        return false;
-        }
+        return (shipsSunk === shipsCount);
     };
 
     const isFleetCreated = () => {
-       return shipsCount === maxShipsOnBoard;
+        return shipsCount === maxShipsOnBoard;
+    };
+
+    const isShipInbounds = (xPos, yPos, length) => {
+        return (xPos + length <= BOARD_SIZE === true || yPos + length <= BOARD_SIZE === true);
+    };
+
+    const isValidPlacement = (shipTested, xPos, yPos, direction) => {
+        for (let i = 0; i < shipTested.getLength(); i++) {
+            if (direction === "horizontal") {
+                if (_board[xPos][yPos + i] !== null) {
+                    return false;
+                } 
+            } else if (direction === "vertical") {
+                if (_board[xPos + i][yPos] !== null) {
+                    return false;
+                } 
+            } 
+        }
+        return true;
     };
 
     return { getBoard, placeShip, receiveAttack, isGameOver, isFleetCreated };
 }
-

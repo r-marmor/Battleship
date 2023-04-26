@@ -33,7 +33,7 @@ const SHIP_TYPES = [
 // HELPERS FUNCTIONS
 
 // checks if starting coordinates are inbounds
-const isOutbounds = (x, y) => {
+const isCoordOutbounds = (x, y) => {
     return (x < 0 || BOARD_SIZE <= x || y < 0 || BOARD_SIZE <= y);
 };
 
@@ -91,7 +91,7 @@ const isFleetCreated = () => {
 
 
 export {
-    isOutbounds,
+    isCoordOutbounds,
     randNum,
     isGameOver,
     isFleetCreated,
