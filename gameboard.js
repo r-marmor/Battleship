@@ -28,7 +28,9 @@ export default function Gameboard() {
 
         createFleet(ship);
 
+        console.log(shipsOnBoard)
 
+        // place ships on board
         for (let i = 0; i < shipLength; i++) {
             if (direction === "horizontal") {
                 _board[startPosX][startPosY + i] = ship;    
@@ -93,9 +95,9 @@ export default function Gameboard() {
         const currentCount = shipsOnBoard.get(shipType.getId()) || 0;
         if (currentCount < maxPerShip[shipType.getId()]) {
             shipsOnBoard.set(shipType.getId(), currentCount + 1);
-        } else {
-            return false;
-        }
+        } else if (currentCount >= maxPerShip[shipType.getId()]) {
+            throw new Error(`Maximum ${shipType.getId()} reached!`);
+        } 
     };
 
     return { getBoard, placeShip, receiveAttack, isGameOver, isFleetCreated };
