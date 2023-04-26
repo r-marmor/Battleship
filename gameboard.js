@@ -26,31 +26,22 @@ export default function Gameboard() {
 
         if (!isValidPlacement(ship, startPosX, startPosY, direction)) throw new Error("Ships can't overlap");
 
+        createFleet(ship);
 
-        // otherwise, just increment his number
-        const currentCount = shipsOnBoard.get(ship.getId()) || 0;
-        if (currentCount < maxPerShip[ship.getId()]) {
-            shipsOnBoard.set(ship.getId(), currentCount + 1);
-        } else {
-            return false;
-        }
-    
-            for (let i = 0; i < shipLength; i++) {
-                if (direction === "horizontal") {
-                        _board[startPosX][startPosY + i] = ship;    
-                    } else if (direction === "vertical") {
-                        _board[startPosX + i][startPosY] = ship;
-                        
-                    } else {
-                        return false;
-                    }
-                } 
-                shipsCount++;
-                return true;
+
+        for (let i = 0; i < shipLength; i++) {
+            if (direction === "horizontal") {
+                _board[startPosX][startPosY + i] = ship;    
+            } else if (direction === "vertical") {
+                _board[startPosX + i][startPosY] = ship; 
+            } else {
+                return false;
+            }
+        } 
+        shipsCount++;
+        return true;
     };
-        
-
-    let missShots = []; // records missed shots
+    
 
     const receiveAttack = (x, y) => {
         let squareShot = _board[x][y];
@@ -65,9 +56,8 @@ export default function Gameboard() {
             }
             return true;
         } else {
-            // if a shot miss, mark the square, store the coordinates
+            // if a shot miss, mark the square
             _board[x][y] = "X";
-            missShots.push(`[${x}, ${y}]`);
             return false;
         }
     };
@@ -97,6 +87,15 @@ export default function Gameboard() {
             } 
         }
         return true;
+    };
+
+    const createFleet = (shipType) => {
+        const currentCount = shipsOnBoard.get(shipType.getId()) || 0;
+        if (currentCount < maxPerShip[shipType.getId()]) {
+            shipsOnBoard.set(shipType.getId(), currentCount + 1);
+        } else {
+            return false;
+        }
     };
 
     return { getBoard, placeShip, receiveAttack, isGameOver, isFleetCreated };
