@@ -26,9 +26,8 @@ export default function Gameboard() {
 
         if (!isValidPlacement(ship, startPosX, startPosY, direction)) throw new Error("Ships can't overlap");
 
-        createFleet(ship);
+        checkMaxShipPerType(ship);
 
-        console.log(shipsOnBoard)
 
         // place ships on board
         for (let i = 0; i < shipLength; i++) {
@@ -91,7 +90,7 @@ export default function Gameboard() {
         return true;
     };
 
-    const createFleet = (shipType) => {
+    const checkMaxShipPerType = (shipType) => {
         const currentCount = shipsOnBoard.get(shipType.getId()) || 0;
         if (currentCount < maxPerShip[shipType.getId()]) {
             shipsOnBoard.set(shipType.getId(), currentCount + 1);
