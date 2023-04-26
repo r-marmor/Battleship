@@ -94,7 +94,7 @@ export default function Gameboard() {
         const currentCount = shipsOnBoard.get(shipType.getId()) || 0;
         if (currentCount < maxPerShip[shipType.getId()]) {
             shipsOnBoard.set(shipType.getId(), currentCount + 1);
-        } else if (currentCount >= maxPerShip[shipType.getId()]) {
+        } else {
             throw new Error(`Maximum ${shipType.getId()} reached!`);
         } 
     };

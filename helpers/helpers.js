@@ -68,8 +68,7 @@ const isFleetCreated = () => {
     p1Board.placeShip(ship2, 2, 0);
     p1Board.placeShip(ship2a, 3, 0);
     p1Board.placeShip(ship3, 4, 0);
-    p1Board.placeShip(ship4, 5, 0);
-    p1Board.placeShip(ship5, 6, 0);  
+    p1Board.placeShip(ship4, 5, 0); 
 
     // player 2 fleet 
     const cpuShip1 = Ship("patrolBoat");
